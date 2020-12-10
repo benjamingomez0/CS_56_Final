@@ -4,13 +4,31 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ListView;
 import javafx.collections.FXCollections;
+import java.util.ArrayList;
 
 public class indexController {
+
+    // Info to be sent to back-end
+    private ArrayList<String> tasks = new ArrayList<String>();
 
     // Left Anchor Pane
     @FXML
     private TextField taskInput;
+    @FXML
+    private ListView taskList;
+
+    @FXML
+    private void addTask() {
+        String text = taskInput.getText();
+        tasks.add(text);
+        text = "Task " + tasks.size() + ": " + text;
+        taskList.getItems().add(new Label(text));
+        taskInput.setText("");
+    }
+
+    /* time frame Choice box variable and handling */
     @FXML
     private ChoiceBox timeBox;
 
@@ -24,11 +42,6 @@ public class indexController {
     @FXML
     private Label currTask;
 
-    // @FXML
-    // private void onButtonClick() {
-    // String text = inputField.getText();
-    // wlcmText.setText(text);
-    // inputField.setText("");
-    // }
+
 
 }
