@@ -14,9 +14,9 @@ public class App extends Application {
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("FE_index.fxml"));
         Scene scene = new Scene(root, 600, 400);
-
         stage.setScene(scene);
         stage.show();
+
     }
 
 }
