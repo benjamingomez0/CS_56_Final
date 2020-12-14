@@ -4,6 +4,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.io.IOException;
 import java.util.*;
 
@@ -12,20 +14,37 @@ public class indexController {
     // Info to be sent to back-end
     private ArrayList<String> tasks = new ArrayList<String>();
     private TSPacket packet;
+    // client
     private TimeSplitterClient client;
+    // value returned from server
     private Integer secPerTask;
+    // ussed to populate current task
+    private int taskNum;
+    private ObservableList<String> choiceboxval;
 
     // constructor
     public indexController(TimeSplitterClient client) {
         this.client = client;
     }
 
+    public void setTaskNum(int taskNum) {
+        this.taskNum = taskNum;
+        currTask.setText(tasks.get(this.taskNum));
+        timePer.setText("Time per task: " + (secPerTask / 60) + "min");
+    }
+
     @FXML
     private Label currTask;
+    @FXML
+    private Label timePer;
     @FXML
     private TextField taskInput;
     @FXML
     private ListView taskList;
+
+    /* time frame Choice box variable and handling */
+    @FXML
+    private ChoiceBox<String> timeBox;
 
     @FXML
     private void addTask() {
@@ -35,10 +54,6 @@ public class indexController {
         taskList.getItems().add(new Label(text));
         taskInput.setText("");
     }
-
-    /* time frame Choice box variable and handling */
-    @FXML
-    private ChoiceBox timeBox;
 
     @FXML
     private void onTimeBoxClick() {
@@ -97,12 +112,22 @@ public class indexController {
         try {
             client.startClient(this.packet);
             this.secPerTask = Integer.parseInt(client.getSecPerTask());
-            currTask.setText(tasks.get(0));
-            System.out.println(secPerTask + " Sec per task");
+            setTaskNum(0);
+
         } catch (IOException ex) {
             ex.printStackTrace();
         }
 
     }
 
+    @FXML
+    private void handleSkip() {
+        if (this.taskNum + 1 > this.tasks.size() - 1) {
+            currTask.setText("Completed!");
+            timePer.setText("");
+        } else {
+            this.setTaskNum(this.taskNum + 1);
+        }
+
+    }
 }
