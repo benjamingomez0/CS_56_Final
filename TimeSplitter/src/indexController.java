@@ -1,20 +1,27 @@
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
 import javafx.collections.FXCollections;
+import java.io.IOException;
 import java.util.*;
 
 public class indexController {
 
     // Info to be sent to back-end
     private ArrayList<String> tasks = new ArrayList<String>();
-    private int timeFrame;
-    private timeFrameTasks packet;
-    // Left Anchor Pane
+    private TSPacket packet;
+    private TimeSplitterClient client;
+    private Integer secPerTask;
+
+    // constructor
+    public indexController(TimeSplitterClient client) {
+        this.client = client;
+    }
+
+    @FXML
+    private Label currTask;
     @FXML
     private TextField taskInput;
     @FXML
@@ -40,10 +47,10 @@ public class indexController {
     }
 
     @FXML
-    private void handleTaskSubmit() {
+    private void handleTaskSubmit() throws ClassNotFoundException {
 
         String time = (String) timeBox.getValue();
-        timeFrame = 1;
+        int timeFrame;
         switch (time) {
             case "1hr":
                 timeFrame = 1;
@@ -86,12 +93,16 @@ public class indexController {
                 timeFrame = 1;
         }
 
-        this.packet = new timeFrameTasks(this.tasks, this.timeFrame);
+        this.packet = new TSPacket(this.tasks, timeFrame);
+        try {
+            client.startClient(this.packet);
+            this.secPerTask = Integer.parseInt(client.getSecPerTask());
+            currTask.setText(tasks.get(0));
+            System.out.println(secPerTask + " Sec per task");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
 
     }
-
-    // Right Anchor Pane
-    @FXML
-    private Label currTask;
 
 }
