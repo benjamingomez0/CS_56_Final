@@ -4,8 +4,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
 import java.io.IOException;
 import java.util.*;
 
@@ -20,7 +18,6 @@ public class indexController {
     private Integer secPerTask;
     // ussed to populate current task
     private int taskNum;
-    private ObservableList<String> choiceboxval;
 
     // constructor
     public indexController(TimeSplitterClient client) {
